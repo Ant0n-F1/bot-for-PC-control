@@ -27,14 +27,17 @@ app = Client("bot", api_id=cfg.api_id, api_hash=cfg.api_hash, bot_token=cfg.TOKE
 
 
 
-with app:
-    start_start = ReplyKeyboardMarkup(
-                [
-                    ["/start"],  # First row
-                ],
-                resize_keyboard=True  # Make the keyboard smaller
-            )
-    app.send_message(cfg.developer_id, f"{cfg.start_text}", reply_markup=start_start)
+try:
+    with app:
+        start_start = ReplyKeyboardMarkup(
+                    [
+                        ["/start"],  # First row
+                    ],
+                    resize_keyboard=True  # Make the keyboard smaller
+                )
+        app.send_message(cfg.developer_id, f"{cfg.start_text}", reply_markup=start_start)
+except:
+    print("Ошибка, не удалось отправить сообщение о запуске ПК.")
 
 
 
