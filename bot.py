@@ -1,20 +1,13 @@
-import subprocess
-import time
-import requests
-import platform as pf
-import os
-import pyautogui as pag
+import subprocess, time, requests, platform as pf, os, pyautogui as pag, cfg, pyrogram, logging
 from sound import Sound
 
-from loguru import logger
-
-import cfg
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
 from pyrogram import enums
 from pyrogram.types import ReplyKeyboardMarkup
 from pyromod import listen
 
+logging.basicConfig(level=logging.INFO)
 
 curs = ''
 
@@ -44,7 +37,6 @@ except:
 
 @app.on_message(filters.command("start", prefixes="/"))
 async def app_start(_, message):
-    print(message.from_user.id)
     if message.from_user.id == cfg.developer_id:
         await app.send_message(message.from_user.id, "Выберите действие:", reply_markup=menu_keyboard)   
     else:
@@ -575,9 +567,8 @@ rc_volume_keyboard = ReplyKeyboardMarkup(
 
 
 if __name__ == '__main__':
-	while True:
-		try:
-			logger.success("Бот успешно запущен! Ожидайте пару секунд для полного функционала.")
-			app.run()
-		except:
-			time.sleep(10)
+    while True:
+        try:
+            app.run()
+        except:
+            time.sleep(10) # Automatically start() and idle()
