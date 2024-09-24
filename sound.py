@@ -50,7 +50,10 @@ class Sound:
         Is muted getter
         :return: boolean
         """
-        return Sound.__is_muted
+        if Sound.__is_muted == False:
+            return "нет"
+        else:
+            return "да"
 
 
     @staticmethod
