@@ -35,7 +35,6 @@ try:
 except:
     print("Ошибка, не удалось отправить сообщение о запуске ПК.")
 
-Sound.volume_set(20)
 
 @app.on_message(filters.command("start", prefixes="/"))
 async def app_start(_, message: msg):
