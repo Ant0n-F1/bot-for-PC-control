@@ -1,5 +1,5 @@
 # Бот для управления компьютером
-Автор keyboard.py - LucasG (https://github.com/lucasg)
+Автор keyboard.py - LucasG (https://github.com/lucasg);  
 Автор sound.py - Paradoxis 
 
 Для первого использования заполните все данные в cfg.py, иначе бот работать не будет.
