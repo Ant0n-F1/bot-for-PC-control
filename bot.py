@@ -1,12 +1,11 @@
-import subprocess, time, requests, platform as pf, os, pyautogui as pag, cfg, pyrogram, logging
+import subprocess, time, pyautogui as pag, cfg, logging, pyrogram
 from sound import Sound
+from cfg import owner_id, start_text
 
 from pyrogram import Client, filters
-from pyrogram.errors import FloodWait
 from pyrogram.types import Message as msg, CallbackQuery as cq
 from pyrogram import enums
 from pyrogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
-from pyromod import listen
 
 logging.basicConfig(level=logging.INFO)
 
@@ -24,43 +23,37 @@ app = Client("bot", api_id=cfg.api_id, api_hash=cfg.api_hash, bot_token=cfg.TOKE
 
 
 try:
-    with app:
-        start_start = ReplyKeyboardMarkup(
-                    [
-                        ["/start"],  # First row
-                    ],
-                    resize_keyboard=True  # Make the keyboard smaller
-                )
-        app.send_message(cfg.developer_id, f"{cfg.start_text}", reply_markup=start_start)
+    with app: #Сообщение о запуске ПК
+        app.send_message(owner_id, f"{start_text}", reply_markup=ReplyKeyboardMarkup([["/start"]], resize_keyboard=True))
 except:
     print("Ошибка, не удалось отправить сообщение о запуске ПК.")
 
 
 @app.on_message(filters.command("start", prefixes="/"))
 async def app_start(_, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         await app.send_message(message.from_user.id, "Выберите действие:", reply_markup=menu_keyboard)   
     else:
         alert = f'Кто-то пытался задать команду: {message.text}\n'
         alert += f'ID: {message.from_user.id}\n'
         alert += f'Username: @{message.from_user.username}'
-        await app.send_message(cfg.developer_id, alert)
+        await app.send_message(owner_id, alert)
 
 #----------------------------  Action with screen  ---------------------------------------------------------
 
-@app.on_message(filters.command("Screen", prefixes=""))
+@app.on_message(filters.command("Screen", prefixes="")) # Изображение экрана
 async def command(_, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         try:
             pag.screenshot('s.png')
             await message.reply_chat_action(enums.ChatAction.UPLOAD_PHOTO)
-            await message.reply_photo("s.png")
+            await message.reply_document("s.png")
         except Exception as e:
             await message.edit_text(f"Произошла ошибка: {str(e)}")
 
 @app.on_message(filters.command("chat", prefixes=""))
 async def command(_, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         asking = await message.chat.ask("Введите текст для отображения на экран.")
         text = asking.text
         await app.send_message(message.from_user.id, f"Текст  '{text}'  отображён.")
@@ -69,7 +62,7 @@ async def command(_, message: msg):
 
 @app.on_message(filters.command("msg", prefixes=""))
 async def command(_, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         asking = await message.chat.ask("Введите текст для отображения на экран.")
         text = asking.text
         await app.send_message(message.from_user.id, f"Текст  '{text}'  отображён.")
@@ -79,7 +72,7 @@ async def command(_, message: msg):
 
 @app.on_message(filters.command("выключение через:", prefixes="@RC_Fire_Bot "))
 async def power_off(client, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         try:
             countdown = int(message.text.split(": ", 1)[1])
             subprocess.run(f"shutdown -s -t {countdown}", shell=True)
@@ -89,7 +82,7 @@ async def power_off(client, message: msg):
 
 @app.on_message(filters.command("перезагрузка через:", prefixes="@RC_Fire_Bot "))
 async def power_restart(client, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         try:
             countdown = int(message.text.split(": ", 1)[1])
             subprocess.run(f"shutdown -r -t {countdown}", shell=True)
@@ -99,7 +92,7 @@ async def power_restart(client, message: msg):
 
 @app.on_message(filters.command("инъекция команды:", prefixes="@RC_Fire_Bot "))
 async def command(_, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         try:
             execute_cmd = message.text.split(": ", 1)[1]
             subprocess.run(f"{execute_cmd}", shell=True)
@@ -109,7 +102,7 @@ async def command(_, message: msg):
 
 @app.on_message(filters.command("power and cmd", prefixes=""))
 async def power_control(client, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         global power_msgid
         power_msgid = message.id + 1
         await message.reply(power_message, reply_markup=power_keyboard)
@@ -118,12 +111,12 @@ async def power_control(client, message: msg):
 
 @app.on_message(filters.command("mouse", prefixes=""))
 async def command(_, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         await message.reply('Выберите действие:', reply_markup=mouse_keyboard)
             
 @app.on_message(filters.command("шаг курсора:", prefixes="@RC_Fire_Bot "))
 async def command(_, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         try:
             global curs
             curs = int(message.text.split(": ", 1)[1])
@@ -134,7 +127,7 @@ async def command(_, message: msg):
             
 @app.on_message(filters.command("sound", prefixes=""))
 async def command(_, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         global sound_msgid
         sound_msgid = message.id + 1
         await app.send_message(message.from_user.id, f"Текущая громкость: {str(Sound.current_volume())}\nЗвук замьючен: {Sound.is_muted()}", reply_markup=sound_keyboard)
@@ -142,7 +135,7 @@ async def command(_, message: msg):
             
 @app.on_message(filters.command("установить громкость:", prefixes="@RC_Fire_Bot "))
 async def command(_, message: msg):
-    if message.from_user.id == cfg.developer_id:
+    if message.from_user.id == owner_id:
         try:
             vol = int(message.text.split(": ", 1)[1])
             Sound.volume_set(vol)
