@@ -3,5 +3,6 @@ api_hash = "000000000000000000000000" #там же где и api_id
 TOKEN = "00000000:AAAAAAAAAAAAAAAAAAAAAAAA" #Токен из @BotFather
 
 owner_id = "00000000" #ID пользователя
+bot_user = "@botfather" #ник бота @...
 
 start_text = "ПК запущен." #Текст при запуске бота
